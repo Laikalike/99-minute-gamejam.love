@@ -4,14 +4,19 @@ function love.load()
   buttonPos3 = 590
   buttonPos4 = 790
   buttonPos5 = 990
-  buttonSpeed = 500
+  buttonY = 570
+  buttonSpeed = 1000
 
-  pattern = {{1,0},{2,0},{3,0},{2,0},{1,0},{2,0},{3,0},{4,0},{3,0},{2,0},{3,0},{4,0},{5,0},{4,0},{3,0},{4,0},{5,0}}
+  pattern = {{1,0},{2,0},{3,0},{2,0},{1,0},{2,0},{3,0},{4,0},{3,0},{2,0},{3,0},{4,0},{5,0},{4,0},{3,0},{4,0},{5,0.5},
+             {1,0},{1,0.2},{3,0},{3,0.2},{2,0},{2,0.2},{4,0},{4,0.2},{3,0},{3,0.2},{5,0},{5,0.2},{4,0},{3,0},{2,0},{1,0},{2,0},{1,0}}
 
   position = 1
-  default = 0.4
-  timer = 1
+  default = 0.2
+  timer = 4
   score = 0
+  gameOver = false
+  hit = 0
+  miss = 0
   scoreTimer = {0,0}
   buttons = {}
 
@@ -61,7 +66,7 @@ function love.update(dt)
       position = position + 1
     end
     if scoreTimer[1] > 0 then
-      scoreTimer[1] = scoreTimer[1] - 1 * dt
+      scoreTimer[1] = scoreTimer[1] - 600 * dt
     elseif scoreTimer[1] < 0 then
       scoreTimer[1] = 0
     end
@@ -70,25 +75,30 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.print("MUNT HERO",500,20,0.2,10,10)
+  love.graphics.print("Hits:", 825, 60)
+  love.graphics.print(hit, 850, 0, 0, 10, 10)
+  love.graphics.print("Misses:", 1000, 60)
+  love.graphics.print(miss, 1050, 0, 0, 10, 10)
+
   drawRiffs()
   drawUI()
   drawButtons()
 
   love.graphics.setColor(255,255,255)
-  love.graphics.print("D",235,680)
-  love.graphics.print("F",435,680)
-  love.graphics.print("G",635,680)
-  love.graphics.print("H",835,680)
-  love.graphics.print("J",1035,680)
-  love.graphics.print(stringScore)
+  love.graphics.print("D",235,buttonY+110)
+  love.graphics.print("F",435,buttonY+110)
+  love.graphics.print("G",635,buttonY+110)
+  love.graphics.print("H",835,buttonY+110)
+  love.graphics.print("J",1035,buttonY+110)
 
-  love.graphics.print("MUNT HERO",500,20,0.2,10,10)
 end
 
 function constructButton(pattern, position)
   timer = pattern[position][2] + default
   button = {}
   button.destroyed = false
+  button.pointAwarded = false
   button.rgb = {}
   button.rgb.alpha = 255
   button.pos = {}
@@ -131,10 +141,15 @@ function updateButtons(dt)
     i = i or 3
     buttons[i].pos.y = buttons[i].pos.y + buttonSpeed * dt
     if buttons[i].destroyed == true then
-      buttons[i].rgb.alpha = buttons[i].rgb.alpha - 1500 * dt
+      if buttons[i].pointAwarded == false then
+        buttons[i].pointAwarded = true
+        hit = hit + 1
+      end
+      buttons[i].rgb.alpha = buttons[i].rgb.alpha - 2500 * dt
     end
     if buttons[i].pos.y > 720 then
       if buttons[i].destroyed == false then
+        miss = miss + 1
         if score < 50 then
           score = 0
         else
@@ -159,31 +174,31 @@ function drawRiffs()
   else
     love.graphics.setColor(0,100,100)
   end
-  love.graphics.rectangle("fill", buttonPos1, 570, 100, 100)
+  love.graphics.rectangle("fill", buttonPos1, buttonY, 100, 100)
   if keyDown == 2 then
     love.graphics.setColor(0, 255, 255)
   else
     love.graphics.setColor(0,100,100)
   end
-  love.graphics.rectangle("fill", buttonPos2, 570, 100, 100)
+  love.graphics.rectangle("fill", buttonPos2, buttonY, 100, 100)
   if keyDown == 3 then
     love.graphics.setColor(0, 255, 255)
   else
     love.graphics.setColor(0,100,100)
   end
-  love.graphics.rectangle("fill", buttonPos3, 570, 100, 100)
+  love.graphics.rectangle("fill", buttonPos3, buttonY, 100, 100)
   if keyDown == 4 then
     love.graphics.setColor(0, 255, 255)
   else
     love.graphics.setColor(0,100,100)
   end
-  love.graphics.rectangle("fill", buttonPos4, 570, 100, 100)
+  love.graphics.rectangle("fill", buttonPos4, buttonY, 100, 100)
   if keyDown == 5 then
     love.graphics.setColor(0, 255, 255)
   else
     love.graphics.setColor(0,100,100)
   end
-  love.graphics.rectangle("fill", buttonPos5, 570, 100, 100)
+  love.graphics.rectangle("fill", buttonPos5, buttonY, 100, 100)
 end
 
 function drawUI()
@@ -215,18 +230,18 @@ end
 function getPosButton(pos, dt)
   for i = 1, table.getn(buttons) do
     if buttons[i].pos.x == pos then
-      if buttons[i].pos.y > 520 then
-        if buttons[i].pos.y < 620 then
+      if buttons[i].pos.y > buttonY-50 then
+        if buttons[i].pos.y < buttonY+50 then
           if buttons[i].destroyed == false then
             buttons[i].destroyed = true
-            scoreTimer = {0.2, buttons[i].id}
+            scoreTimer = {1, buttons[i].id}
             score = score + 100
           end
         end
       end
     end
   end
-  if scoreTimer[1] == 0 and score > 0 or scoreTimer[2] ~= keyDown then
+  if scoreTimer[1] == 0 or scoreTimer[2] ~= keyDown and score > 0 then
     score = score - 500 * dt
   end
 end
