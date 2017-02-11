@@ -21,5 +21,15 @@ function loadState(name)
 end
 
 function love.load()
+  background = love.graphics.newVideo("assets/menu_background.ogv", false)
+  background:play()
 	loadState("menu")
+end
+
+
+function checkBackgroundVideo()
+  if background:isPlaying() == false then
+    background:rewind()
+    background:play()
+  end
 end

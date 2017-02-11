@@ -13,7 +13,7 @@ function love.load()
              {1,0},{1,0.2},{3,0},{3,0.2},{2,0},{2,0.2},{4,0},{4,0.2},{3,0},{3,0.2},{5,0},{5,0.2},{4,0},{3,0},{2,0},{1,0},{2,0},{1,0}}
   position = 1
 
-  timer = 0
+  timer = 0.3
   score = 0
   gameOver = false
   hit = 0
@@ -60,6 +60,7 @@ function love.update(dt)
   end
 
   updateButtons(dt)
+  checkBackgroundVideo()
   timer = timer - dt
   if timer < 0 then
     if position < table.getn(pattern)+1 then
@@ -76,6 +77,8 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.draw(background)
   love.graphics.print("MUNT HERO",500,20,0.2,10,10)
   love.graphics.print("Hits:", 825, 60)
   love.graphics.print(hit, 850, 0, 0, 10, 10)

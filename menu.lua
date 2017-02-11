@@ -1,6 +1,5 @@
 function love.load(arg)
   logo           = love.graphics.newImage("assets/menu_logo.png")
-  background     = love.graphics.newVideo("assets/menu_background.ogv", false)
   icon_play      = {love.graphics.newImage("assets/icons/icon_play.png"),200,80,200,80,1} --asset, xpos, ypos, xscaled, yscaled, scale value
   icon_difficuly = {love.graphics.newImage("assets/icons/icon_difficuly.png"),200,80,200,80,1} -- [2]/[4], [3]/[5] should ALWAYS start equal
   icon_exit      = {love.graphics.newImage("assets/icons/icon_exit.png"),200,80,200,80,1}
@@ -101,12 +100,5 @@ function menuUpdateButtons(dt)
     else
       menu[i][1][6] = 1
     end
-  end
-end
-
-function checkBackgroundVideo()
-  if background:isPlaying() == false then
-    background:rewind()
-    background:play()
   end
 end
