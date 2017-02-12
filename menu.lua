@@ -1,8 +1,9 @@
 function load()
   logo           = love.graphics.newImage("assets/menu_logo.png")
-  icon_play      = {love.graphics.newImage("assets/icons/icon_play.png"),200,80,200,80,1} --asset, xpos, ypos, xscaled, yscaled, scale value
   icon_difficuly = {love.graphics.newImage("assets/icons/icon_difficuly.png"),200,80,200,80,1} -- [2]/[4], [3]/[5] should ALWAYS start equal
-  icon_exit      = {love.graphics.newImage("assets/icons/icon_exit.png"),200,80,200,80,1}
+  icon_play      = {love.graphics.newImage("assets/icons/icon_play.png"),200,80,200,80,1, false} --asset, xpos, ypos, xscaled, yscaled, scale value, onHover
+  icon_difficuly = {love.graphics.newImage("assets/icons/icon_difficuly.png"),200,80,200,80,1, false} -- [2]/[4], [3]/[5] should ALWAYS start equal
+  icon_exit      = {love.graphics.newImage("assets/icons/icon_exit.png"),200,80,200,80,1, false}
 
   sine_counter = 0
   sine         = 0
@@ -65,7 +66,7 @@ end
 function menuDrawButtons()
   for i = 1, table.getn(menu) do
     if alpha_main[2] < 155 then
-      love.graphics.setColor(255, 255, 255, alpha_main[2])
+      love.graphics.setColor(255, 255, 255, alpha_main[2]+(menu[i][1][6]-0.9)*450)
     else
       love.graphics.setColor(255,255,255,155+((menu[i][1][6]-0.9)*450))
     end
@@ -77,18 +78,23 @@ function menuGetClicked(dt)
   for i = 1, table.getn(menu) do
     if mx > 520 and mx < 720 then
       if my > menu_ypos_offset + (menu_ypos_gap * (i - 1)) and my < menu_ypos_offset + (menu_ypos_gap * (i - 1)) + menu[i][1][3] then
+        menu[i][1][7] = true
         menuActiveHover(i, dt)
         if love.mouse.isDown(1) then
           loadstring(menu[i][2])()
         end
+      else
+        menu[i][1][7] = false
       end
+    else
+      menu[i][1][7] = false
     end
   end
 end
 
 function menuActiveHover(i, dt)
   if menu[i][1][6] < 1.2 then
-    menu[i][1][6] = menu[i][1][6] + 2 * dt
+    menu[i][1][6] = menu[i][1][6] + 1 * dt
   else
     menu[i][1][6] = 1.2
   end
@@ -99,7 +105,9 @@ function menuUpdateButtons(dt)
     menu[i][1][4] = menu[i][1][2] * menu[i][1][6]
     menu[i][1][5] = menu[i][1][3] * menu[i][1][6]
     if menu[i][1][6] > 1 then
-      menu[i][1][6] = menu[i][1][6] - 1 * dt
+      if menu[i][1][7] == false then
+        menu[i][1][6] = menu[i][1][6] - 1 * dt
+      end
     else
       menu[i][1][6] = 1
     end

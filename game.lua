@@ -71,7 +71,7 @@ function love.update(dt)
         if table.getn(buttons) - hit == 0 then
           gameOver = true
           gameOverTimer = gameOverTimer - dt
-          if gameOverTimer < 0 then
+          if gameOverTimer < -1 then
             love.event.quit("restart")
           end
         end
