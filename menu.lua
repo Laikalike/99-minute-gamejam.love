@@ -1,4 +1,4 @@
-function love.load(arg)
+function load()
   logo           = love.graphics.newImage("assets/menu_logo.png")
   icon_play      = {love.graphics.newImage("assets/icons/icon_play.png"),200,80,200,80,1} --asset, xpos, ypos, xscaled, yscaled, scale value
   icon_difficuly = {love.graphics.newImage("assets/icons/icon_difficuly.png"),200,80,200,80,1} -- [2]/[4], [3]/[5] should ALWAYS start equal
@@ -47,9 +47,12 @@ function love.draw()
   menuDrawButtons()
   love.graphics.setColor(255, 255, 255, alpha_main[2])
   love.graphics.draw(logo, 390, logo_ypos)
+  love.graphics.setColor(255,255,255,255)
+  love.graphics.print("this is a menu")
 end
 
 function updateMenu(mode)
+  print("i have been called")
   if mode == "default" then
     menu = {
       {icon_play, 'loadState("game")'}, --'updateMenu("songs")'

@@ -4,10 +4,11 @@ function clearLoveCallbacks()
 	love.joystickreleased = nil
 	love.keypressed = nil
 	love.keyreleased = nil
-	love.load = nil
+	--love.load = nil
 	love.mousepressed = nil
 	love.mousereleased = nil
 	love.update = nil
+	load = nil
 end
 
 state = {}
@@ -15,9 +16,8 @@ state = {}
 function loadState(name)
 	state = {}
 	clearLoveCallbacks()
-	local path = name
-	require(path)
-	love.load()
+	require(name)
+	load()
 end
 
 function love.load()
@@ -26,10 +26,18 @@ function love.load()
 	loadState("menu")
 end
 
-
 function checkBackgroundVideo()
   if background:isPlaying() == false then
     background:rewind()
     background:play()
   end
+end
+
+function load()
+end
+
+function love.draw()
+end
+
+function love.update()
 end
